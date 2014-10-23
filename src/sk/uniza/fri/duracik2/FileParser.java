@@ -32,7 +32,7 @@ public class FileParser {
 	private static final String UZLY = "SR_uzly.ATR";
 	private static final String UZLY_SURADNICE = "SR_uzly.VEC";
 	
-	private static final int MAGIC_CONSTANTA = 100;
+	private static final int MAGIC_CONSTANTA = 1;
 
 	private HashMap<Integer, Okres> aOkresy;
 	private HashMap<Integer, Uzol> aUzly;
