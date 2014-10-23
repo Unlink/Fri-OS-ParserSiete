@@ -11,13 +11,16 @@ package sk.uniza.fri.duracik2.entity;
  */
 public class Uzol {
 	private int aId;
-	private int aNazov;
+	private String aNazov;
 	private int aX;
 	private int aY;
+	private Okres aOkres;
+	
+	private static final String KRIZOVATKA = "križovatka";
 
-	public Uzol(int paId, int paNazov) {
+	public Uzol(int paId, String paNazov) {
 		this.aId = paId;
-		this.aNazov = paNazov;
+		this.aNazov = (paNazov.isEmpty()) ? KRIZOVATKA : paNazov;
 	}
 
 	public int getId() {
@@ -28,11 +31,11 @@ public class Uzol {
 		this.aId = id;
 	}
 
-	public int getNazov() {
+	public String getNazov() {
 		return aNazov;
 	}
 
-	public void setNazov(int nazov) {
+	public void setNazov(String nazov) {
 		this.aNazov = nazov;
 	}
 
@@ -51,7 +54,18 @@ public class Uzol {
 	public void setY(int y) {
 		this.aY = y;
 	}
-	
-	
+
+	public Okres getOkres() {
+		return aOkres;
+	}
+
+	public void setOkres(Okres okres) {
+		this.aOkres = okres;
+	}
+
+	@Override
+	public String toString() {
+		return "Uzol{" + "aId=" + aId + ", aNazov=" + aNazov + ", aX=" + aX + ", aY=" + aY + ", aOkres=" + aOkres + '}';
+	}
 	
 }
