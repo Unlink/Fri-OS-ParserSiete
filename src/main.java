@@ -34,7 +34,7 @@ public class main {
     }
 
     public static Polygon nacitajHraniceOkresu(String IDokresu) throws FileNotFoundException, IOException {
-        FileReader f = new FileReader("C:\\Users\\Ferko\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_Okresy.VEC");
+        FileReader f = new FileReader("C:\\Users\\Unlink\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_Okresy.VEC");
         BufferedReader br = new BufferedReader(f);
 
         String readLine = br.readLine();
@@ -67,7 +67,7 @@ public class main {
     }
     
     public static ArrayList<Integer> nacitajUzly(Polygon poly1, Polygon poly2) throws FileNotFoundException, IOException{
-        FileReader f = new FileReader("C:\\Users\\Ferko\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_uzly.vec");
+        FileReader f = new FileReader("C:\\Users\\Unlink\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_uzly.vec");
         BufferedReader br = new BufferedReader(f);
         
         ArrayList<Integer> IDuzlov = new ArrayList<Integer>();
@@ -90,7 +90,7 @@ public class main {
     }
     
     public static ArrayList<Usek> nacitajIDusekovAjSbodmi(ArrayList<Integer> nacitaneUzly) throws FileNotFoundException, IOException{
-        FileReader f = new FileReader("C:\\Users\\Ferko\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_incid.txt");
+        FileReader f = new FileReader("C:\\Users\\Unlink\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_incid.txt");
         BufferedReader br = new BufferedReader(f);
         ArrayList<Usek> useky = new ArrayList<>();
         int count=0;
@@ -111,7 +111,7 @@ public class main {
         return useky;
     }
     public static void pridelUsekomDlzky(ArrayList<Usek> paUseky) throws FileNotFoundException, IOException{
-        FileReader f = new FileReader("C:\\Users\\Ferko\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_cesty.ATR");
+        FileReader f = new FileReader("C:\\Users\\Unlink\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_cesty.ATR");
         BufferedReader br = new BufferedReader(f);
         String readLine = br.readLine();
         
@@ -128,7 +128,7 @@ public class main {
     }
     
     public static ArrayList<Uzol> spravUzly(ArrayList<Integer> paIDckaUzlov) throws FileNotFoundException, IOException{
-        FileReader f = new FileReader("C:\\Users\\Ferko\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_uzly.ATR");
+        FileReader f = new FileReader("C:\\Users\\Unlink\\Documents\\NetBeansProjects\\OSParser\\Siet\\SR_uzly.ATR");
         BufferedReader br = new BufferedReader(f);
         String readLine = br.readLine();
         
