@@ -11,8 +11,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import sk.uniza.fri.duracik2.FileParser;
+import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Okres;
 import sk.uniza.fri.duracik2.entity.Uzol;
 
@@ -24,7 +32,7 @@ public class MapaCanvas extends JComponent {
 	private BufferedImage bi;
 
 	public MapaCanvas() {
-		bi = new BufferedImage(1350, 900, BufferedImage.TYPE_INT_ARGB);
+		bi = new BufferedImage(1350*FileParser.MAGIC_CONSTANTA, 900*FileParser.MAGIC_CONSTANTA, BufferedImage.TYPE_INT_ARGB);
 		bi.getGraphics().setColor(Color.WHITE);
 		bi.getGraphics().fillRect(0, 0, bi.getWidth(), bi.getHeight());
 		this.setPreferredSize(new Dimension(bi.getWidth(), bi.getHeight()));
@@ -35,7 +43,7 @@ public class MapaCanvas extends JComponent {
 		paG.drawImage(bi, 0, 0, null);
 	}
 	
-	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly) {
+	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany) {
 		Graphics2D g = (Graphics2D) bi.getGraphics();
 		AffineTransform tx = new AffineTransform();
 		tx.translate(0,bi.getHeight());
@@ -47,10 +55,24 @@ public class MapaCanvas extends JComponent {
 		}
 		g.setColor(Color.RED);
 		for (Uzol u : uzly) {
-			g.fillOval(u.getX(), u.getY(), 2, 2);
+			if (!u.isKrizovatka())
+				g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
+		}
+		
+		g.setColor(Color.GRAY);
+		for (Hrana h : hrany) {
+			g.drawLine(h.getU1().getX(), h.getU1().getY(), h.getU2().getX(), h.getU2().getY());
 		}
 		
 		this.repaint();
+	}
+	
+	public void saveToImage(File path) {
+		try {
+			ImageIO.write(bi, "png", path);
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(this, "Súbor sa nepodarilo uložiť\n"+ex.getMessage());
+		}
 	}
 	
 }

@@ -62,6 +62,10 @@ public class Uzol {
 	public void setOkres(Okres okres) {
 		this.aOkres = okres;
 	}
+	
+	public boolean isKrizovatka() {
+		return aNazov == KRIZOVATKA;
+	}
 
 	@Override
 	public String toString() {

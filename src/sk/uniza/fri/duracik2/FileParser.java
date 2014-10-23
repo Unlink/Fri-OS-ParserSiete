@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Scanner;
+import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Okres;
 import sk.uniza.fri.duracik2.entity.Uzol;
 
@@ -32,15 +33,21 @@ public class FileParser {
 	private static final String UZLY = "SR_uzly.ATR";
 	private static final String UZLY_SURADNICE = "SR_uzly.VEC";
 	
-	private static final int MAGIC_CONSTANTA = 1;
+	private static final String HRANY = "SR_incid.txt";
+	private static final String HRANY_DLZKA = "SR_cesty.ATR";
+	
+	public static final int MAGIC_CONSTANTA = 2;
 
 	private HashMap<Integer, Okres> aOkresy;
 	private HashMap<Integer, Uzol> aUzly;
+	private HashMap<Integer, Hrana> aHrany;
+	
 
 	public FileParser(File paDirectory) {
 		this.aDirectory = paDirectory;
 		this.aOkresy = null;
 		this.aUzly = null;
+		this.aHrany = null;
 	}
 
 	public HashMap<Integer, Okres> nahrajOkresy() {
@@ -55,6 +62,13 @@ public class FileParser {
 			aUzly = _NahrajUzly();
 		}
 		return aUzly;
+	}
+	
+	public HashMap<Integer, Hrana> nahrajHrany() {
+		if (aHrany == null) {
+			aHrany = _NahrajHrany();
+		}
+		return aHrany;
 	}
 	
 	public Okres najdiOkres(int paX, int paY) {
@@ -139,6 +153,36 @@ public class FileParser {
 			System.err.println(ex.getMessage());
 		}
 		return uzly;
+	}
+
+	private HashMap<Integer, Hrana> _NahrajHrany() {
+		if (aUzly == null) {
+			nahrajUzly();
+		}
+		HashMap<Integer, Hrana> hrany = new HashMap<>();
+		try (
+				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(aDirectory, HRANY))));
+				BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(new File(aDirectory, HRANY_DLZKA))));
+		) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				Scanner s = new Scanner(line);
+				Hrana h = new Hrana(s.nextInt(), aUzly.get(s.nextInt()), aUzly.get(s.nextInt()));
+				hrany.put(h.getId(), h);
+			}
+			
+			while ((line = br1.readLine()) != null) {
+				String[] split = line.split(" ");
+				int id = parseInt(split[0]);
+				if (id == 0) break;
+				double dlzka = parseDouble(split[1]);
+				hrany.get(id).setDlzka(dlzka);
+			}
+			
+		} catch (IOException ex) {
+			System.err.println(ex.getMessage());
+		}
+		return hrany;
 	}
 
 }
