@@ -67,7 +67,7 @@ public class Mapa extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         FileParser fp = new FileParser(new File("C:\\Users\\Unlink\\Desktop\\opts"));
-		mapaCanvas1.vykresliOkresy(fp.nahrajOkresy().values());
+		mapaCanvas1.vykresli(fp.nahrajOkresy().values(), fp.nahrajUzly().values());
     }//GEN-LAST:event_jButton1ActionPerformed
 
 	/**

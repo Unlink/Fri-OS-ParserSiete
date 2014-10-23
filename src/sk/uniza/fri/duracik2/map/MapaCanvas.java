@@ -35,7 +35,7 @@ public class MapaCanvas extends JComponent {
 		paG.drawImage(bi, 0, 0, null);
 	}
 	
-	public void vykresliOkresy(Collection<Okres> okresy) {
+	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly) {
 		Graphics2D g = (Graphics2D) bi.getGraphics();
 		AffineTransform tx = new AffineTransform();
 		tx.translate(0,bi.getHeight());
@@ -45,6 +45,11 @@ public class MapaCanvas extends JComponent {
 		for (Okres o : okresy) {
 			g.draw(o.getHranica());
 		}
+		g.setColor(Color.RED);
+		for (Uzol u : uzly) {
+			g.fillOval(u.getX(), u.getY(), 2, 2);
+		}
+		
 		this.repaint();
 	}
 	

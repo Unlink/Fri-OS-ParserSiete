@@ -125,9 +125,10 @@ public class FileParser {
 				String[] split = line.split(" ");
 				int id = parseInt(split[0]);
 				if (id == 0) break;
-				split = br1.readLine().split(" ");
+				line = br1.readLine();
+				split = line.split(" ");
 				int x = (int) (parseDouble(split[1])*MAGIC_CONSTANTA);
-				int y = (int) (parseDouble(split[1])*MAGIC_CONSTANTA);
+				int y = (int) (parseDouble(split[3])*MAGIC_CONSTANTA);
 				Uzol u = uzly.get(id);
 				u.setX(x);
 				u.setY(y);
