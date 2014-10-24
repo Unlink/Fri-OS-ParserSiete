@@ -13,7 +13,10 @@ public class Main {
 	public static void main(String[] args) {
 		String pathToData = "C:\\Users\\Unlink\\Desktop\\opts";
 		FileParser fp = new FileParser(new File(pathToData));
-		for (Okres o:fp.nahrajOkresy().values()) {
+		
+		System.out.println(fp.najdiOkres("žilina"));
+		
+		/*for (Okres o:fp.nahrajOkresy().values()) {
 			System.out.println(o.toString());
 		}
 		
@@ -22,7 +25,7 @@ public class Main {
 			if (u.getOkres() == null) b++; else a++;
 			System.out.println(u);
 		}
-		System.out.println("Má okres "+a+" a nemá okres "+b);
+		System.out.println("Má okres "+a+" a nemá okres "+b);*/
 	}
 	
 }

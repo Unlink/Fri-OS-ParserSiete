@@ -71,6 +71,14 @@ public class FileParser {
 		return aHrany;
 	}
 	
+	public Okres najdiOkres(String paName) {
+		for (Okres o : nahrajOkresy().values()) {
+			if (o.getName().equalsIgnoreCase(paName))
+				return o;
+		}
+		return null;
+	}
+	
 	public Okres najdiOkres(int paX, int paY) {
 		for (Okres value : aOkresy.values()) {
 			if (value.getHranica().contains(paX, paY))
@@ -87,7 +95,7 @@ public class FileParser {
 			String line;
 			while ((line = br.readLine()) != null) {
 				Scanner s = new Scanner(line);
-				Okres o = new Okres(s.nextInt(), s.nextLine());
+				Okres o = new Okres(s.nextInt(), s.nextLine().trim());
 				okresy.put(o.getId(), o);
 			}
 

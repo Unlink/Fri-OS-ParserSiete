@@ -53,10 +53,16 @@ public class MapaCanvas extends JComponent {
 		for (Okres o : okresy) {
 			g.draw(o.getHranica());
 		}
-		g.setColor(Color.RED);
 		for (Uzol u : uzly) {
-			if (!u.isKrizovatka())
+			if (!u.isKrizovatka()) {
+				if (u.getOkres() != null) g.setColor(Color.GREEN.darker());
+				else g.setColor(Color.RED);
 				g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
+			}
+			else if (u.isKrizovatka() && u.getOkres() == null) {
+				g.setColor(Color.YELLOW.darker());
+				g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
+			}
 		}
 		
 		g.setColor(Color.GRAY);
