@@ -6,6 +6,7 @@
 package sk.uniza.fri.duracik2.grafy;
 
 import java.util.Arrays;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import sk.uniza.fri.duracik2.entity.Hrana;
@@ -30,8 +31,13 @@ public class Graf {
 	}
 
 	public void dopocitajMaticuSymetricky() {
+		dopocitajMaticuSymetricky(null);
+	}
+	
+	public void dopocitajMaticuSymetricky(ProgessListenerer evntlst) {
 		boolean[] pouzite = new boolean[aMatica.length];
 		for (int i = 0; i < aMatica.length - 1; i++) {
+			if (evntlst!=null) evntlst.stateChanged(i/(double)aMatica.length);
 			Arrays.fill(pouzite, false);
 			pouzite[i] = true;
 			for (int j = 1; j < aMatica.length; j++) {
@@ -70,5 +76,10 @@ public class Graf {
 
 	public Uzol[] getUzly() {
 		return aUzly;
+	}
+
+
+	public static interface ProgessListenerer extends EventListener {
+		public void stateChanged(double percentage);
 	}
 }

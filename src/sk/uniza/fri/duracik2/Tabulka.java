@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.EventListener;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -30,6 +32,7 @@ import sk.uniza.fri.duracik2.grafy.GrafBuilder;
 public class Tabulka extends javax.swing.JFrame {
 
 	private File aData;
+	private FileParser fp;
 
 	/**
 	 * Creates new form Tabulka
@@ -59,6 +62,7 @@ public class Tabulka extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Generuj");
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -126,16 +130,16 @@ public class Tabulka extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 		jButton1.setEnabled(false);
-		new SwingWorker<Object, Object>() {
+		new SwingWorker<Object, Double>() {
 			
 			String[][] tbldata;
 			Object[] head;
+			String bnt = jButton1.getText();
 			
 			@Override
 			protected Object doInBackground() throws Exception {
-				if (aData != null) {
-					FileParser fp = new FileParser(aData);
-
+				if (fp != null) {
+					publish(0.0);
 					GrafBuilder b = new GrafBuilder();
 					Set<Uzol> uzly = fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()));
 					Set<Hrana> hrany = fp.najdiHrany(uzly);
@@ -146,7 +150,12 @@ public class Tabulka extends javax.swing.JFrame {
 						b.pridajHranu(hrany1);
 					}
 					Graf g = b.build();
-					g.dopocitajMaticuSymetricky();
+					g.dopocitajMaticuSymetricky(new Graf.ProgessListenerer() {
+						@Override
+						public void stateChanged(double paPercentage) {
+							publish(paPercentage);
+						}
+					});
 					
 					head = new Object[uzly.size() + 1];
 					Uzol[] x = g.getUzly();
@@ -179,8 +188,16 @@ public class Tabulka extends javax.swing.JFrame {
 				}
 				finally {
 					jButton1.setEnabled(true);
+					jButton1.setText(bnt);
 				}
 			}
+
+			@Override
+			protected void process(List<Double> paChunks) {
+				jButton1.setText(String.format("%.1f%s", paChunks.get(paChunks.size()-1)*100, "% hotovo"));
+			}
+			
+			
 		}.execute();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -189,8 +206,24 @@ public class Tabulka extends javax.swing.JFrame {
 		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			aData = jfc.getSelectedFile();
-			jButton1.setEnabled(true);
 			jLabel3.setText(aData.getAbsolutePath());
+			jButton2.setEnabled(false);
+			new SwingWorker<Object, Object> () {
+
+				@Override
+				protected Object doInBackground() throws Exception {
+					fp = new FileParser(aData);
+					fp.nahrajHrany();//Nacita data do pamate
+					return fp;
+				}
+
+				@Override
+				protected void done() {
+					jButton1.setEnabled(true);
+					jButton2.setEnabled(true);
+				}
+				
+			}.execute();
 		}
     }//GEN-LAST:event_jButton2ActionPerformed
 
