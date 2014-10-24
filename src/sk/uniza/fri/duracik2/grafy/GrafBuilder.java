@@ -5,11 +5,15 @@
  */
 package sk.uniza.fri.duracik2.grafy;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Uzol;
+
+import static java.lang.Double.POSITIVE_INFINITY;
 
 /**
  *
@@ -35,6 +39,14 @@ public class GrafBuilder {
 	}
 	
 	public Graf build() {
+		Collections.sort(aUzly, new Comparator<Uzol>() {
+			@Override
+			public int compare(Uzol paO1, Uzol paO2) {
+				return Integer.compare(paO2.getPocObv(), paO1.getPocObv());
+			}
+		});
+		
+		
 		Uzol[] uzly = new Uzol[aUzly.size()];
 		HashMap<Uzol, Integer> map = new HashMap<>();
 		double[][] matica = new double[uzly.length][uzly.length];
@@ -55,7 +67,8 @@ public class GrafBuilder {
 	private void inicializujMaticu(double[][] matica) {
 		for (int i = 0; i < matica.length; i++) {
 			for (int j = 0; j < matica[0].length; j++) {
-				matica[i][j] = Double.MAX_VALUE;
+				if (i == j) matica[i][j] = 0;
+				else matica[i][j] = Double.POSITIVE_INFINITY;
 			}
 		}
 	}

@@ -34,7 +34,7 @@ public class Graf {
 		for (int i = 0; i < aMatica.length - 1; i++) {
 			Arrays.fill(pouzite, false);
 			pouzite[i] = true;
-			for (int j = i + 1; j < aMatica.length; j++) {
+			for (int j = 1; j < aMatica.length; j++) {
 				int x = najdiMinimum(i, pouzite);
 				if (x == -1) {
 					break;
@@ -42,8 +42,9 @@ public class Graf {
 				pouzite[x] = true;
 
 				for (int k = i + 1; k < aMatica.length; k++) {
-					if (aMatica[x][k] + aMatica[j][x] < aMatica[j][k]) {
-						aMatica[j][k] = aMatica[x][k] + aMatica[j][x];
+					if (aMatica[x][k] + aMatica[i][x] < aMatica[i][k]) {
+						aMatica[i][k] = aMatica[x][k] + aMatica[i][x];
+						aMatica[k][i] = aMatica[x][k] + aMatica[i][x];
 					}
 				}
 
@@ -54,7 +55,7 @@ public class Graf {
 	private int najdiMinimum(int paI, boolean[] paPouzite) {
 		double min = Double.MAX_VALUE;
 		int min_index = -1;
-		for (int k = paI + 1; k < aMatica.length; k++) {
+		for (int k = 0; k < aMatica.length; k++) {
 			if (!paPouzite[k] && aMatica[paI][k] < min) {
 				min = aMatica[paI][k];
 				min_index = k;
@@ -66,5 +67,8 @@ public class Graf {
 	public double[][] getMatica() {
 		return aMatica;
 	}
-	
+
+	public Uzol[] getUzly() {
+		return aUzly;
+	}
 }

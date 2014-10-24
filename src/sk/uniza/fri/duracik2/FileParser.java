@@ -34,6 +34,7 @@ public class FileParser {
 	
 	private static final String UZLY = "SR_uzly.ATR";
 	private static final String UZLY_SURADNICE = "SR_uzly.VEC";
+	private static final String UZLY_POC_OBY = "obyvatelia.txt";
 	
 	private static final String HRANY = "SR_incid.txt";
 	private static final String HRANY_DLZKA = "SR_cesty.ATR";
@@ -171,6 +172,7 @@ public class FileParser {
 		try (
 				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(aDirectory, UZLY)), "cp1250"));
 				BufferedReader br1 = new BufferedReader(new InputStreamReader(new FileInputStream(new File(aDirectory, UZLY_SURADNICE))));
+				BufferedReader br2 = new BufferedReader(new InputStreamReader(new FileInputStream(new File(aDirectory, UZLY_POC_OBY))));
 		) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -191,6 +193,13 @@ public class FileParser {
 				u.setX(x);
 				u.setY(y);
 				u.setOkres(najdiOkres(x, y));
+			}
+			
+			while ((line = br2.readLine()) != null) {
+				String[] split = line.split("\t");
+				int id = parseInt(split[0]);
+				int obyv = parseInt(split[1]);
+				if (uzly.containsKey(id)) uzly.get(id).setPocObv(obyv);
 			}
 			
 		} catch (IOException ex) {

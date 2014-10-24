@@ -15,6 +15,7 @@ public class Uzol {
 	private int aX;
 	private int aY;
 	private Okres aOkres;
+	private int aPocObv;
 	
 	private static final String KRIZOVATKA = "križovatka";
 
@@ -66,6 +67,8 @@ public class Uzol {
 	public boolean isKrizovatka() {
 		return aNazov == KRIZOVATKA;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -92,6 +95,14 @@ public class Uzol {
 			return false;
 		}
 		return true;
+	}
+
+	public int getPocObv() {
+		return aPocObv;
+	}
+
+	public void setPocObv(int pocObv) {
+		this.aPocObv = pocObv;
 	}
 	
 	
