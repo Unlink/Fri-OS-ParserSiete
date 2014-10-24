@@ -12,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Okres;
 import sk.uniza.fri.duracik2.entity.Uzol;
@@ -85,6 +87,40 @@ public class FileParser {
 				return value;
 		}
 		return null;
+	}
+	
+	public Set<Okres> najdiOkresy(String paStr) {
+		HashSet<Okres> okresy = new HashSet<>();
+		for (String s:paStr.split(",")) {
+			Okres o = najdiOkres(s.trim());
+			if (o == null) {
+				System.err.println("Nepodarilo sa nájsť okres "+s.trim());
+			}
+			else {
+				okresy.add(o);
+			}
+		}
+		return okresy;
+	}
+	
+	public Set<Uzol> najdiUzly(Set<Okres> paOkresy) {
+		HashSet<Uzol> uzly = new HashSet<>();
+		for (Uzol u : nahrajUzly().values()) {
+			if (paOkresy.contains(u.getOkres())) {
+				uzly.add(u);
+			}
+		}
+		return uzly;
+	}
+	
+	public Set<Hrana> najdiHrany(Set<Uzol> paUzly) {
+		HashSet<Hrana> hrany = new HashSet<>();
+		for (Hrana h : nahrajHrany().values()) {
+			if (paUzly.contains(h.getU1()) && paUzly.contains(h.getU2())) {
+				hrany.add(h);
+			}
+		}
+		return hrany;
 	}
 
 	private HashMap<Integer, Okres> _NahrajOkresy() {

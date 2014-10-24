@@ -71,5 +71,29 @@ public class Uzol {
 	public String toString() {
 		return "Uzol{" + "aId=" + aId + ", aNazov=" + aNazov + ", aX=" + aX + ", aY=" + aY + ", aOkres=" + aOkres + '}';
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 83 * hash + this.aId;
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Uzol other = (Uzol) obj;
+		if (this.aId != other.aId) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }

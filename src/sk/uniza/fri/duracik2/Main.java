@@ -1,5 +1,6 @@
 package sk.uniza.fri.duracik2;
 
+import sk.uniza.fri.duracik2.grafy.GrafBuilder;
 import java.io.File;
 import sk.uniza.fri.duracik2.entity.Okres;
 import sk.uniza.fri.duracik2.entity.Uzol;
@@ -15,6 +16,11 @@ public class Main {
 		FileParser fp = new FileParser(new File(pathToData));
 		
 		System.out.println(fp.najdiOkres("žilina"));
+		
+		GrafBuilder gb = new GrafBuilder();
+		gb.pridajUzol(null)
+			.pridajUzol(null);
+		gb.build();
 		
 		/*for (Okres o:fp.nahrajOkresy().values()) {
 			System.out.println(o.toString());
