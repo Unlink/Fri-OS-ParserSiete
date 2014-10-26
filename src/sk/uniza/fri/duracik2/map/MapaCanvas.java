@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,17 +32,38 @@ import sk.uniza.fri.duracik2.entity.Uzol;
  */
 public class MapaCanvas extends JComponent {
 	private BufferedImage bi;
+	private double scaleFactor = 1.0;
 
 	public MapaCanvas() {
 		bi = new BufferedImage(1350*FileParser.MAGIC_CONSTANTA, 900*FileParser.MAGIC_CONSTANTA, BufferedImage.TYPE_INT_ARGB);
 		bi.getGraphics().setColor(Color.WHITE);
 		bi.getGraphics().fillRect(0, 0, bi.getWidth(), bi.getHeight());
 		this.setPreferredSize(new Dimension(bi.getWidth(), bi.getHeight()));
+		
+		this.addMouseWheelListener(new MouseAdapter() {
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent paE) {
+				if (paE.getWheelRotation() > 0){
+					scaleFactor *= 1.1;
+				}
+				else {
+					scaleFactor *= 0.9;
+				}
+				repaint();
+			}
+			
+		});
 	}
 
 	@Override
 	protected void paintComponent(Graphics paG) {
+		/*AffineTransform t = new AffineTransform();
+		t.scale(scaleFactor, scaleFactor);
+		((Graphics2D) paG).setTransform(t);*/
 		paG.drawImage(bi, 0, 0, null);
+		/*this.setSize((int)(1350*FileParser.MAGIC_CONSTANTA*scaleFactor), (int)(900*FileParser.MAGIC_CONSTANTA*scaleFactor));
+		scrooler.validate();*/
 	}
 	
 	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany) {

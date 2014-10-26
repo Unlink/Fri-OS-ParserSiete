@@ -39,7 +39,7 @@ public class FileParser {
 	private static final String HRANY = "SR_incid.txt";
 	private static final String HRANY_DLZKA = "SR_cesty.ATR";
 	
-	public static final int MAGIC_CONSTANTA = 2;
+	public static final int MAGIC_CONSTANTA = 3;
 
 	private HashMap<Integer, Okres> aOkresy;
 	private HashMap<Integer, Uzol> aUzly;
@@ -105,9 +105,13 @@ public class FileParser {
 	}
 	
 	public Set<Uzol> najdiUzly(Set<Okres> paOkresy) {
+		return najdiUzly(paOkresy, true);
+	}
+	
+	public Set<Uzol> najdiUzly(Set<Okres> paOkresy, boolean paKrizovatky) {
 		HashSet<Uzol> uzly = new HashSet<>();
 		for (Uzol u : nahrajUzly().values()) {
-			if (paOkresy.contains(u.getOkres())) {
+			if (paOkresy.contains(u.getOkres()) && (!u.isKrizovatka() || paKrizovatky)) {
 				uzly.add(u);
 			}
 		}

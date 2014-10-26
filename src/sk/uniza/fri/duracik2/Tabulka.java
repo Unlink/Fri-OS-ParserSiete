@@ -6,24 +6,19 @@
 package sk.uniza.fri.duracik2;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.EventListener;
+import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Locale;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
-import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Uzol;
-import sk.uniza.fri.duracik2.grafy.Graf;
-import sk.uniza.fri.duracik2.grafy.GrafBuilder;
+import sk.uniza.fri.duracik2.grafy.MaticaVzdalenosti;
+import sk.uniza.fri.duracik2.map.Mapa;
 
 /**
  *
@@ -54,12 +49,23 @@ public class Tabulka extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Matica vzdialeností");
 
         jButton1.setText("Generuj");
         jButton1.setEnabled(false);
@@ -71,6 +77,15 @@ public class Tabulka extends javax.swing.JFrame {
 
         jLabel1.setText("Okresy");
 
+        jButton2.setText("Load Datadir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("No directory loaded");
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -81,14 +96,45 @@ public class Tabulka extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton2.setText("Load Datadir");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jTabbedPane1.addTab("Tabuľka", jScrollPane1);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Consolas", 0, 10)); // NOI18N
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        jTabbedPane1.addTab("Text", jScrollPane2);
+
+        jTextArea2.setColumns(20);
+        jTextArea2.setFont(new java.awt.Font("Consolas", 0, 10)); // NOI18N
+        jTextArea2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea2);
+
+        jTabbedPane1.addTab("Mosel", jScrollPane3);
+
+        jLabel2.setText("Limit");
+
+        jTextField2.setText("50");
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jTextField2ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("No directory loaded");
+        jMenu2.setText("Tools");
+
+        jMenuItem1.setText("Mapa SR");
+        jMenuItem1.setEnabled(false);
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,13 +146,17 @@ public class Tabulka extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(4, 4, 4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE))
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                .addGap(12, 12, 12))
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,12 +167,11 @@ public class Tabulka extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jButton2)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(298, 298, 298))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addGap(44, 44, 44)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE))
         );
 
         pack();
@@ -140,36 +189,60 @@ public class Tabulka extends javax.swing.JFrame {
 			protected Object doInBackground() throws Exception {
 				if (fp != null) {
 					publish(0.0);
-					GrafBuilder b = new GrafBuilder();
-					Set<Uzol> uzly = fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()));
-					Set<Hrana> hrany = fp.najdiHrany(uzly);
-					for (Uzol uzly1 : uzly) {
-						b.pridajUzol(uzly1);
-					}
-					for (Hrana hrany1 : hrany) {
-						b.pridajHranu(hrany1);
-					}
-					Graf g = b.build();
-					g.dopocitajMaticuSymetricky(new Graf.ProgessListenerer() {
+					MaticaVzdalenosti maticaVzdalenosti = new MaticaVzdalenosti(fp);
+					maticaVzdalenosti.addProgressListnerer(new MaticaVzdalenosti.ProgessListenerer() {
 						@Override
 						public void stateChanged(double paPercentage) {
 							publish(paPercentage);
 						}
 					});
+					ArrayList<Uzol> uzly = new ArrayList<>(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), false));
+					Collections.sort(uzly, new Comparator<Uzol>() {
+						@Override
+						public int compare(Uzol paO1, Uzol paO2) {
+							return Integer.compare(paO2.getPocObv(), paO1.getPocObv());
+						}
+					});
+					int limit = Integer.parseInt(jTextField2.getText());
+					for (int i=limit; i<uzly.size(); ) {
+						uzly.remove(uzly.size()-1);
+					}
 					
+					maticaVzdalenosti.riesDjikstraPre(uzly);
+				
 					head = new Object[uzly.size() + 1];
-					Uzol[] x = g.getUzly();
 					tbldata = new String[uzly.size()][uzly.size() + 1];
-					double[][] matica1 = g.getMatica();
+					StringBuilder sb = new StringBuilder();
+					StringBuilder sb2 = new StringBuilder();
+					double[][] matica1 = maticaVzdalenosti.precitajRiesenie(uzly);
+					sb.append(String.format("%25s", ""));
+					sb2.append("mesta::[");
+					for (int i = 0; i < uzly.size(); i++) {
+						head[i+1] = uzly.get(i).getNazov();
+						tbldata[i][0] = uzly.get(i).getNazov();
+						sb.append(String.format("%25s", uzly.get(i).getNazov()));
+						sb2.append(String.format("\"%s\", ", uzly.get(i).getNazov()));
+					}
+					sb.append("\n");
+					sb2.delete(sb2.length()-2, sb2.length());
+					sb2.append("]\n");
+					
+					sb2.append("matica::[");
 					for (int i = 0; i < matica1.length; i++) {
+						sb.append(String.format("%25s", uzly.get(i).getNazov()));
 						for (int j = 0; j < matica1[0].length; j++) {
 							tbldata[i][j + 1] = String.format("%.3f", matica1[i][j]);
+							sb.append(String.format("%25s", String.format("%.3f", matica1[i][j])));
+							sb2.append(String.format(Locale.US, "%.3f, ", matica1[i][j]));
 						}
+						sb.append("\n");
+						sb2.delete(sb2.length()-1, sb2.length());
+						sb2.append("\n");
 					}
-					for (int i = 0; i < x.length; i++) {
-						head[i+1] = x[i].getNazov();
-						tbldata[i][0] = x[i].getNazov();
-					}
+					sb2.delete(sb2.length()-2, sb2.length());
+					sb2.append("]\n");
+					jTextArea1.setText(sb.toString());
+					jTextArea2.setText(sb2.toString());
 					return 1;
 				}
 				tbldata = new String[0][0];
@@ -221,11 +294,20 @@ public class Tabulka extends javax.swing.JFrame {
 				protected void done() {
 					jButton1.setEnabled(true);
 					jButton2.setEnabled(true);
+					jMenuItem1.setEnabled(true);
 				}
 				
 			}.execute();
 		}
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new Mapa(this, fp).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -255,9 +337,19 @@ public class Tabulka extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
