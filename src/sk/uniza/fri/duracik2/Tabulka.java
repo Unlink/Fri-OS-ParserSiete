@@ -6,7 +6,6 @@
 package sk.uniza.fri.duracik2;
 
 import java.io.File;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,14 +98,14 @@ public class Tabulka extends javax.swing.JFrame {
         jTabbedPane1.addTab("Tabuľka", jScrollPane1);
 
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Consolas", 0, 10)); // NOI18N
+        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
         jTabbedPane1.addTab("Text", jScrollPane2);
 
         jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Consolas", 0, 10)); // NOI18N
+        jTextArea2.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         jTextArea2.setRows(5);
         jScrollPane3.setViewportView(jTextArea2);
 
@@ -214,18 +213,24 @@ public class Tabulka extends javax.swing.JFrame {
 					tbldata = new String[uzly.size()][uzly.size() + 1];
 					StringBuilder sb = new StringBuilder();
 					StringBuilder sb2 = new StringBuilder();
+					StringBuilder sb3 = new StringBuilder();
 					double[][] matica1 = maticaVzdalenosti.precitajRiesenie(uzly);
 					sb.append(String.format("%25s", ""));
 					sb2.append("mesta::[");
+					sb3.append("obyvatelia::[");
 					for (int i = 0; i < uzly.size(); i++) {
 						head[i+1] = uzly.get(i).getNazov();
 						tbldata[i][0] = uzly.get(i).getNazov();
 						sb.append(String.format("%25s", uzly.get(i).getNazov()));
 						sb2.append(String.format("\"%s\", ", uzly.get(i).getNazov()));
+						sb3.append(String.format("%d, ", uzly.get(i).getPocObv()));
 					}
 					sb.append("\n");
 					sb2.delete(sb2.length()-2, sb2.length());
 					sb2.append("]\n");
+					sb3.delete(sb3.length()-2, sb3.length());
+					sb3.append("]\n");
+					sb2.append(sb3);
 					
 					sb2.append("matica::[");
 					for (int i = 0; i < matica1.length; i++) {
