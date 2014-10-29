@@ -237,10 +237,10 @@ public class Tabulka extends javax.swing.JFrame {
 					tbldata = new String[uzly.size()][uzly.size() + 1];					
 					double[][] matica1 = maticaVzdalenosti.precitajRiesenie(uzly);
 					sb.append(String.format("%25s", ""));
-					sb2.append("celkovoObyvatelov::").append(pocObyvatelov).append("\n");
-					sb2.append("celkovoDedin::").append(celkovoDedin).append("\n");
-					sb2.append("mesta::[");
-					sb3.append("obyvatelia::[");
+					sb2.append("celkovoObyvatelov:").append(pocObyvatelov).append("\n");
+					sb2.append("celkovoDedin:").append(celkovoDedin).append("\n");
+					sb2.append("mesta:[");
+					sb3.append("obyvatelia:[");
 					for (int i = 0; i < uzly.size(); i++) {
 						head[i+1] = uzly.get(i).getNazov();
 						tbldata[i][0] = uzly.get(i).getNazov();
@@ -255,7 +255,7 @@ public class Tabulka extends javax.swing.JFrame {
 					sb3.append("]\n");
 					sb2.append(sb3);
 					
-					sb2.append("matica::[");
+					sb2.append("matica:[");
 					for (int i = 0; i < matica1.length; i++) {
 						sb.append(String.format("%25s", uzly.get(i).getNazov()));
 						for (int j = 0; j < matica1[0].length; j++) {
