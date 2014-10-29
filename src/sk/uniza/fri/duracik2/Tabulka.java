@@ -216,6 +216,7 @@ public class Tabulka extends javax.swing.JFrame {
 					});
 					ArrayList<Uzol> uzly = new ArrayList<>(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), false));
 					int pocObyvatelov = 0;
+					int celkovoDedin = uzly.size();
 					for (Uzol u : uzly) {
 						pocObyvatelov+=u.getPocObv();
 					}
@@ -237,6 +238,7 @@ public class Tabulka extends javax.swing.JFrame {
 					double[][] matica1 = maticaVzdalenosti.precitajRiesenie(uzly);
 					sb.append(String.format("%25s", ""));
 					sb2.append("celkovoObyvatelov::").append(pocObyvatelov).append("\n");
+					sb2.append("celkovoDedin::").append(celkovoDedin).append("\n");
 					sb2.append("mesta::[");
 					sb3.append("obyvatelia::[");
 					for (int i = 0; i < uzly.size(); i++) {
@@ -276,10 +278,10 @@ public class Tabulka extends javax.swing.JFrame {
 					}
 					
 					for (Hrana h : fp.najdiHrany(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), true))) {
-						sb4.append(h.getId());
-						sb4.append("\t").append(h.getU1());
-						sb4.append("\t").append(h.getU2());
-						sb4.append("\t").append(h.getDlzka()).append("\n");
+						sb5.append(h.getId());
+						sb5.append("\t").append(h.getU1().getId());
+						sb5.append("\t").append(h.getU2().getId());
+						sb5.append("\t").append(h.getDlzka()).append("\n");
 					}
 					
 					return 1;
