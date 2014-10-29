@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
+import sk.uniza.fri.duracik2.entity.Hrana;
 import sk.uniza.fri.duracik2.entity.Uzol;
 import sk.uniza.fri.duracik2.grafy.MaticaVzdalenosti;
 import sk.uniza.fri.duracik2.map.Mapa;
@@ -57,6 +58,10 @@ public class Tabulka extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextPane2 = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -110,6 +115,14 @@ public class Tabulka extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTextArea2);
 
         jTabbedPane1.addTab("Mosel", jScrollPane3);
+
+        jScrollPane4.setViewportView(jTextPane1);
+
+        jTabbedPane1.addTab("Subor1", jScrollPane4);
+
+        jScrollPane5.setViewportView(jTextPane2);
+
+        jTabbedPane1.addTab("Subor2", jScrollPane5);
 
         jLabel2.setText("Limit");
 
@@ -183,6 +196,12 @@ public class Tabulka extends javax.swing.JFrame {
 			String[][] tbldata;
 			Object[] head;
 			String bnt = jButton1.getText();
+			StringBuilder sb = new StringBuilder();
+			StringBuilder sb2 = new StringBuilder();
+			StringBuilder sb3 = new StringBuilder();
+			
+			StringBuilder sb4 = new StringBuilder();
+			StringBuilder sb5 = new StringBuilder();
 			
 			@Override
 			protected Object doInBackground() throws Exception {
@@ -196,6 +215,10 @@ public class Tabulka extends javax.swing.JFrame {
 						}
 					});
 					ArrayList<Uzol> uzly = new ArrayList<>(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), false));
+					int pocObyvatelov = 0;
+					for (Uzol u : uzly) {
+						pocObyvatelov+=u.getPocObv();
+					}
 					Collections.sort(uzly, new Comparator<Uzol>() {
 						@Override
 						public int compare(Uzol paO1, Uzol paO2) {
@@ -210,12 +233,10 @@ public class Tabulka extends javax.swing.JFrame {
 					maticaVzdalenosti.riesDjikstraPre(uzly);
 				
 					head = new Object[uzly.size() + 1];
-					tbldata = new String[uzly.size()][uzly.size() + 1];
-					StringBuilder sb = new StringBuilder();
-					StringBuilder sb2 = new StringBuilder();
-					StringBuilder sb3 = new StringBuilder();
+					tbldata = new String[uzly.size()][uzly.size() + 1];					
 					double[][] matica1 = maticaVzdalenosti.precitajRiesenie(uzly);
 					sb.append(String.format("%25s", ""));
+					sb2.append("celkovoObyvatelov::").append(pocObyvatelov).append("\n");
 					sb2.append("mesta::[");
 					sb3.append("obyvatelia::[");
 					for (int i = 0; i < uzly.size(); i++) {
@@ -246,8 +267,21 @@ public class Tabulka extends javax.swing.JFrame {
 					}
 					sb2.delete(sb2.length()-2, sb2.length());
 					sb2.append("]\n");
-					jTextArea1.setText(sb.toString());
-					jTextArea2.setText(sb2.toString());
+					
+					for (Uzol u : fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), true)) {
+						sb4.append(u.getId());
+						sb4.append("\t").append(u.getNazov());
+						sb4.append("\t").append(u.getX());
+						sb4.append("\t").append(u.getY()).append("\n");
+					}
+					
+					for (Hrana h : fp.najdiHrany(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), true))) {
+						sb4.append(h.getId());
+						sb4.append("\t").append(h.getU1());
+						sb4.append("\t").append(h.getU2());
+						sb4.append("\t").append(h.getDlzka()).append("\n");
+					}
+					
 					return 1;
 				}
 				tbldata = new String[0][0];
@@ -260,6 +294,11 @@ public class Tabulka extends javax.swing.JFrame {
 				try {
 					jTable1.setModel(new DefaultTableModel(tbldata, head));
 					jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+					jTextArea1.setText(sb.toString());
+					jTextArea2.setText(sb2.toString());
+					
+					jTextPane1.setText(sb4.toString());
+					jTextPane2.setText(sb5.toString());
 					
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -314,6 +353,7 @@ public class Tabulka extends javax.swing.JFrame {
         new Mapa(this, fp).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+	
 	/**
 	 * @param args the command line arguments
 	 */
@@ -350,11 +390,15 @@ public class Tabulka extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextPane jTextPane2;
     // End of variables declaration//GEN-END:variables
 }
