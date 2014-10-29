@@ -6,10 +6,13 @@
 package sk.uniza.fri.duracik2.map;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import sk.uniza.fri.duracik2.FileParser;
+import sk.uniza.fri.duracik2.entity.Okres;
 
 /**
  *
@@ -24,7 +27,8 @@ public class Mapa extends javax.swing.JDialog {
 	public Mapa(JFrame parent, FileParser fp) {
 		super(parent, "Mapa SR", true);
 		initComponents();
-		mapaCanvas1.vykresli(fp.nahrajOkresy().values(), fp.nahrajUzly().values(), fp.nahrajHrany().values());
+		Set<Okres> okrs = new HashSet<>(fp.nahrajOkresy().values());
+		mapaCanvas1.vykresli(okrs, fp.najdiUzly(okrs), fp.najdiHrany(fp.najdiUzly(okrs)));
 	}
 
 	/**
@@ -37,7 +41,7 @@ public class Mapa extends javax.swing.JDialog {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        mapaCanvas1 = new sk.uniza.fri.duracik2.map.MapaCanvas();
+        mapaCanvas1 = new sk.uniza.fri.duracik2.map.MapaCanvas2();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -55,10 +59,10 @@ public class Mapa extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jButton2)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -39,7 +39,7 @@ public class FileParser {
 	private static final String HRANY = "SR_incid.txt";
 	private static final String HRANY_DLZKA = "SR_cesty.ATR";
 	
-	public static final int MAGIC_CONSTANTA = 3;
+	public static final int MAGIC_CONSTANTA = 1;
 
 	private HashMap<Integer, Okres> aOkresy;
 	private HashMap<Integer, Uzol> aUzly;
