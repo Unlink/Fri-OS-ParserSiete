@@ -39,7 +39,7 @@ public class FileParser {
 	private static final String HRANY = "SR_incid.txt";
 	private static final String HRANY_DLZKA = "SR_cesty.ATR";
 	
-	public static final int MAGIC_CONSTANTA = 3;
+	public static final int MAGIC_CONSTANTA = 1;
 
 	private HashMap<Integer, Okres> aOkresy;
 	private HashMap<Integer, Uzol> aUzly;
@@ -85,6 +85,14 @@ public class FileParser {
 	public Okres najdiOkres(int paX, int paY) {
 		for (Okres value : aOkresy.values()) {
 			if (value.getHranica().contains(paX, paY))
+				return value;
+		}
+		return null;
+	}
+	
+	public Uzol najdiUzol(String paName) {
+		for (Uzol value : aUzly.values()) {
+			if (value.getNazov().equalsIgnoreCase(paName))
 				return value;
 		}
 		return null;
