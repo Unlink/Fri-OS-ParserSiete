@@ -31,7 +31,7 @@ public class Zvyraznenie implements Iterable<Uzol> {
 		this.aPolygon = aPolygon;
 		this.aPriradenia = new LinkedList<>();
 	}
-	
+
 	public Zvyraznenie(Uzol aCentrum, Color aFarba) {
 		this(aCentrum, aFarba, true);
 	}
@@ -39,10 +39,10 @@ public class Zvyraznenie implements Iterable<Uzol> {
 	public Color getFarba() {
 		return aFarba;
 	}
-	
+
 	public void pridajUzol(Uzol paUzol) {
 		aPriradenia.add(paUzol);
-	}	
+	}
 
 	@Override
 	public Iterator<Uzol> iterator() {
@@ -56,27 +56,39 @@ public class Zvyraznenie implements Iterable<Uzol> {
 	public boolean isPolygon() {
 		return aPolygon;
 	}
-	
+
 	public Polygon getPolygon() {
+		return getPolygon(false);
+	}
+	
+	public Polygon getPolygon(boolean zahrnStredisko) {
 		if (isPolygon()) {
 			Polygon poly = new Polygon();
 			ArrayList<Uzol> x = new ArrayList<>(aPriradenia);
+			if (zahrnStredisko) {
+				x.add(aCentrum);
+			}
+
 			Collections.sort(x, new Comparator<Uzol>() {
 				@Override
 				public int compare(Uzol o1, Uzol o2) {
-					double angle1 = ((o1.getX()-aCentrum.getX()) == 0) ? 0 : Math.atan2((o1.getY()-aCentrum.getY()),(o1.getX()-aCentrum.getX()));
-					double angle2 = ((o2.getX()-aCentrum.getX()) == 0) ? 0 : Math.atan2((o2.getY()-aCentrum.getY()),(o2.getX()-aCentrum.getX()));
+					double angle1 = /*((o1.getX()-aCentrum.getX()) == 0) ? 0 : */ Math.atan2((o1.getY() - aCentrum.getY()), (o1.getX() - aCentrum.getX()));
+					double angle2 = /*((o2.getX()-aCentrum.getX()) == 0) ? 0 : */ Math.atan2((o2.getY() - aCentrum.getY()), (o2.getX() - aCentrum.getX()));
 					return (angle1 == angle2) ? 0 : (angle1 < angle2) ? 1 : -1;
 				}
 			});
 			for (Uzol x1 : x) {
-				if (!x1.equals(aCentrum))
+				if (!x1.equals(aCentrum) || zahrnStredisko) {
 					poly.addPoint(x1.getX(), x1.getY());
+				}
 			}
-			poly.addPoint(poly.xpoints[0], poly.ypoints[0]);
+			
+			if (!poly.contains(aCentrum.getX(), aCentrum.getY())) {
+				return getPolygon(true);
+			}
 			return poly;
 		}
 		return null;
 	}
-	
+
 }

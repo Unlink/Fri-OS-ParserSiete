@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.TexturePaint;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
@@ -150,6 +151,20 @@ public class MapaCanvas2 extends JComponent {
 			g.setColor(z.getFarba());
 			/*g.drawString(z.getCentrum().getNazov(), (int) (max.x*scaleFactor)-200, y);
 			 y+=20;*/
+			/*BufferedImage bufferedImage
+				= new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
+
+			Graphics2D g2 = bufferedImage.createGraphics();
+			g2.setColor(Color.GRAY);
+			g2.fillRect(0, 0, 5, 5);
+			g2.setColor(new Color(z.getFarba().getRed(), z.getFarba().getGreen(), z.getFarba().getBlue(), 70));
+			g2.drawLine(0, 0, 5, 5); // \
+			g2.drawLine(0, 5, 5, 0); // /
+
+			// paint with the texturing brush
+			Rectangle2D rect = new Rectangle2D.Double(0, 0, 5, 5);
+			*/
+			
 			if (z.isPolygon()) {
 				Polygon p = new Polygon();
 				Polygon origo = z.getPolygon();
@@ -158,6 +173,7 @@ public class MapaCanvas2 extends JComponent {
 				}
 				g.draw(p);
 
+				//g.setPaint(new TexturePaint(bufferedImage, rect));
 				g.setColor(new Color(z.getFarba().getRed(), z.getFarba().getGreen(), z.getFarba().getBlue(), 70));
 				g.fill(p);
 			}
