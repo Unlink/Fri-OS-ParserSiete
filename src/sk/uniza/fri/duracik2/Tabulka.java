@@ -305,11 +305,6 @@ public class Tabulka extends javax.swing.JFrame {
 					});
 					okresy = fp.najdiOkresy(jTextField1.getText());
 					uzly = new ArrayList<>(fp.najdiUzly(okresy, false));
-					int pocObyvatelov = 0;
-					int celkovoDedin = uzly.size();
-					for (Uzol u : uzly) {
-						pocObyvatelov+=u.getPocObv();
-					}
 					Collections.sort(uzly, new Comparator<Uzol>() {
 						@Override
 						public int compare(Uzol paO1, Uzol paO2) {
