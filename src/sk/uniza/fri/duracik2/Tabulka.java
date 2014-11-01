@@ -38,7 +38,7 @@ public class Tabulka extends javax.swing.JFrame {
 	private MaticaVzdalenosti maticaVzdalenosti;
 	private ArrayList<Uzol> uzly;
 	private Set<Okres> okresy;
-	private Color[] colors = new Color[]{Color.RED, Color.BLUE, Color.ORANGE};
+	private Color[] colors = new Color[]{Color.RED, Color.BLUE, Color.GREEN.darker()};
 
 	/**
 	 * Creates new form Tabulka
