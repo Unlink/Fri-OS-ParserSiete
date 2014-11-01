@@ -8,6 +8,8 @@ package sk.uniza.fri.duracik2.map;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -176,6 +178,39 @@ public class MapaCanvas2 extends JComponent {
 				//g.setPaint(new TexturePaint(bufferedImage, rect));
 				g.setColor(new Color(z.getFarba().getRed(), z.getFarba().getGreen(), z.getFarba().getBlue(), 70));
 				g.fill(p);
+			}
+		}
+		
+		g.setColor(Color.BLACK);
+		g.setFont(new java.awt.Font("Arial", Font.BOLD, 11));
+		int ks = 0;
+		for (Uzol u : aUzly) {
+			if (!u.isKrizovatka()) {
+				FontMetrics fontMetrics = g.getFontMetrics();
+				BufferedImage bx = new BufferedImage(fontMetrics.stringWidth(u.getNazov()), fontMetrics.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics2D gx = (Graphics2D) bx.getGraphics();
+				AffineTransform txx = new AffineTransform();
+				txx.translate(0,0);
+				txx.scale(1.0, -1.0);
+				gx.setTransform(txx);
+				
+				gx.setColor(Color.black);
+				for (Zvyraznenie zv : aZvyraznene) {
+					if (zv.getCentrum() == u) {
+						gx.setColor(zv.getFarba());
+						break;
+					}
+				}
+				gx.setFont(g.getFont());
+				gx.drawString(u.getNazov(), 0, 0);
+				
+				g.drawImage(bx, ((int)(u.getX()*scaleFactor))-(fontMetrics.stringWidth(u.getNazov())/2), (int)(u.getY()*scaleFactor)+fontMetrics.getHeight()/2, null);
+				
+				//g.drawString(u.getNazov(), (float)(u.getX()*scaleFactor), (float)(u.getY()*scaleFactor));
+				//g.fill(new Rectangle2D.Double(u.getX() * scaleFactor - halfWidth, u.getY() * scaleFactor - halfWidth, pointWidth, pointWidth));
+				if (ks++>6) {
+					break;
+				}
 			}
 		}
 

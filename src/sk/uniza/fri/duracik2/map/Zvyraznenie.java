@@ -48,7 +48,7 @@ public class Zvyraznenie implements Iterable<Uzol> {
 	public Iterator<Uzol> iterator() {
 		return aPriradenia.iterator();
 	}
-
+	
 	public Uzol getCentrum() {
 		return aCentrum;
 	}
