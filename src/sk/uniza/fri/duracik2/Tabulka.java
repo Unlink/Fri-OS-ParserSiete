@@ -215,11 +215,6 @@ public class Tabulka extends javax.swing.JFrame {
 						}
 					});
 					ArrayList<Uzol> uzly = new ArrayList<>(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), false));
-					int pocObyvatelov = 0;
-					int celkovoDedin = uzly.size();
-					for (Uzol u : uzly) {
-						pocObyvatelov+=u.getPocObv();
-					}
 					Collections.sort(uzly, new Comparator<Uzol>() {
 						@Override
 						public int compare(Uzol paO1, Uzol paO2) {
@@ -229,6 +224,11 @@ public class Tabulka extends javax.swing.JFrame {
 					int limit = Integer.parseInt(jTextField2.getText());
 					for (int i=limit; i<uzly.size(); ) {
 						uzly.remove(uzly.size()-1);
+					}
+					int pocObyvatelov = 0;
+					int celkovoDedin = uzly.size();
+					for (Uzol u : uzly) {
+						pocObyvatelov+=u.getPocObv();
 					}
 					
 					maticaVzdalenosti.riesDjikstraPre(uzly);
