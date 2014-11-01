@@ -5,20 +5,27 @@
  */
 package sk.uniza.fri.duracik2;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import sk.uniza.fri.duracik2.entity.Hrana;
+import sk.uniza.fri.duracik2.entity.Okres;
 import sk.uniza.fri.duracik2.entity.Uzol;
 import sk.uniza.fri.duracik2.grafy.MaticaVzdalenosti;
 import sk.uniza.fri.duracik2.map.Mapa;
+import sk.uniza.fri.duracik2.map.Zvyraznenie;
 
 /**
  *
@@ -28,6 +35,10 @@ public class Tabulka extends javax.swing.JFrame {
 
 	private File aData;
 	private FileParser fp;
+	private MaticaVzdalenosti maticaVzdalenosti;
+	private ArrayList<Uzol> uzly;
+	private Set<Okres> okresy;
+	private Color[] colors = new Color[]{Color.RED, Color.BLUE, Color.ORANGE};
 
 	/**
 	 * Creates new form Tabulka
@@ -62,6 +73,16 @@ public class Tabulka extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextPane2 = new javax.swing.JTextPane();
+        jPanel1 = new javax.swing.JPanel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jTextField4 = new javax.swing.JTextField();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        mapaCanvas21 = new sk.uniza.fri.duracik2.map.MapaCanvas2();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -124,6 +145,73 @@ public class Tabulka extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Subor2", jScrollPane5);
 
+        jLabel4.setText("Strediska");
+
+        jLabel5.setText("Radius");
+
+        jButton3.setText("Vykresli");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jTextField4.setText("18");
+
+        jScrollPane6.setViewportView(mapaCanvas21);
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.SystemColor.activeCaption));
+        jPanel2.setLayout(new java.awt.GridLayout(0, 1));
+
+        jLabel6.setText("Zvýraznenia");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addContainerGap())))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Mapa", jPanel1);
+
         jLabel2.setText("Limit");
 
         jTextField2.setText("50");
@@ -166,7 +254,7 @@ public class Tabulka extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
             .addComponent(jTabbedPane1)
         );
@@ -207,14 +295,16 @@ public class Tabulka extends javax.swing.JFrame {
 			protected Object doInBackground() throws Exception {
 				if (fp != null) {
 					publish(0.0);
-					MaticaVzdalenosti maticaVzdalenosti = new MaticaVzdalenosti(fp);
+				    maticaVzdalenosti = new MaticaVzdalenosti(fp);
 					maticaVzdalenosti.addProgressListnerer(new MaticaVzdalenosti.ProgessListenerer() {
 						@Override
 						public void stateChanged(double paPercentage) {
 							publish(paPercentage);
+							
 						}
 					});
-					ArrayList<Uzol> uzly = new ArrayList<>(fp.najdiUzly(fp.najdiOkresy(jTextField1.getText()), false));
+					okresy = fp.najdiOkresy(jTextField1.getText());
+					uzly = new ArrayList<>(fp.najdiUzly(okresy, false));
 					int pocObyvatelov = 0;
 					int celkovoDedin = uzly.size();
 					for (Uzol u : uzly) {
@@ -355,6 +445,38 @@ public class Tabulka extends javax.swing.JFrame {
         new Mapa(this, fp).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+		ArrayList<Uzol> strediska = new ArrayList<>();
+		for (String split : jTextField3.getText().split(",")) {
+			strediska.add(fp.najdiUzol(split.toLowerCase().trim()));
+		}
+		double radius = Double.parseDouble(jTextField4.getText());
+		if (maticaVzdalenosti != null) {
+			LinkedList<Zvyraznenie> z = new LinkedList<>();
+			double[][] r = maticaVzdalenosti.precitajRiesenie(uzly);
+			for (Uzol u : strediska) {
+				int index = uzly.indexOf(u);
+				z.add(new Zvyraznenie(u, colors[z.size()%colors.length]));
+				for (int i = 0; i < r[index].length; i++) {
+					if (i!=index && r[index][i] < radius) {
+						z.getLast().pridajUzol(uzly.get(i));
+					}
+				}
+			}
+			jPanel2.removeAll();
+			for (Zvyraznenie z1 : z) {
+				JLabel l = new JLabel();
+				l.setText(z1.getCentrum().getNazov());
+				l.setForeground(z1.getFarba());
+				l.setSize(150, 30);
+				jPanel2.add(l);
+			}
+			jPanel2.validate();
+			
+			mapaCanvas21.vykresli(okresy, uzly, fp.najdiHrany(fp.najdiUzly(okresy, true)), z);
+			}
+    }//GEN-LAST:event_jButton3ActionPerformed
+
 	
 	/**
 	 * @param args the command line arguments
@@ -383,24 +505,34 @@ public class Tabulka extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextPane jTextPane2;
+    private sk.uniza.fri.duracik2.map.MapaCanvas2 mapaCanvas21;
     // End of variables declaration//GEN-END:variables
 }

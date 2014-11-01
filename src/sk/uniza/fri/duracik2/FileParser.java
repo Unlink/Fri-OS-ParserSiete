@@ -90,6 +90,14 @@ public class FileParser {
 		return null;
 	}
 	
+	public Uzol najdiUzol(String paName) {
+		for (Uzol value : aUzly.values()) {
+			if (value.getNazov().equalsIgnoreCase(paName))
+				return value;
+		}
+		return null;
+	}
+	
 	public Set<Okres> najdiOkresy(String paStr) {
 		HashSet<Okres> okresy = new HashSet<>();
 		for (String s:paStr.split(",")) {

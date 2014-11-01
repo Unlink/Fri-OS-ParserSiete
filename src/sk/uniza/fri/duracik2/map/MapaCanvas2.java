@@ -5,16 +5,26 @@
  */
 package sk.uniza.fri.duracik2.map;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -27,24 +37,36 @@ import sk.uniza.fri.duracik2.entity.Uzol;
  *
  * @author Unlink
  */
-public class MapaCanvas2 extends MapaCanvas {
+public class MapaCanvas2 extends JComponent {
 	private BufferedImage bi;
+	private Collection<Okres> aOkresy;
+	private Collection<Uzol> aUzly;
+	private Collection<Hrana> aHrany;
+	private Collection<Zvyraznenie> aZvyraznene;
 
 	public MapaCanvas2() {
 		this.bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		this.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				if (aUzly != null)
+					vykresli();
+			}
+			
+		});
 	}
 	
-	@Override
 	protected void paintComponent(Graphics paG) {
 		paG.drawImage(bi, 0, 0, null);
 		//this.setSize(bi.getWidth(), bi.getHeight());
 	}
 	
-	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany) {
+	private void vykresli() {
 		//Vypočet hranic
 		Point min = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 		Point max = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
-		for (Okres o : okresy) {
+		for (Okres o : aOkresy) {
 			for (int i = 0; i < o.getHranica().npoints; i++) {
 				min.x = Math.min(min.x, o.getHranica().xpoints[i]);
 				min.y = Math.min(min.y, o.getHranica().ypoints[i]);
@@ -53,7 +75,7 @@ public class MapaCanvas2 extends MapaCanvas {
 			}
 		}
 		Dimension rozmer = new Dimension(max.x - min.x, max.y - min.y);
-		/*double scaleFactor = 1;
+		double scaleFactor = 1;
 		if (rozmer.width < getWidth() && rozmer.height < getHeight()) {
 			if (getWidth() / (double)rozmer.width < getHeight() / (double)rozmer.height) {
 				scaleFactor = getWidth() / (double)rozmer.width;
@@ -62,39 +84,94 @@ public class MapaCanvas2 extends MapaCanvas {
 				scaleFactor = getHeight() / (double)rozmer.height;
 			}
 		}
-		rozmer = new Dimension((int)(rozmer.width*scaleFactor), (int)(rozmer.height*scaleFactor));*/
+		rozmer = new Dimension((int)(rozmer.width*scaleFactor), (int)(rozmer.height*scaleFactor));
 		
 		Dimension border = new Dimension(10, 10);
 		bi = new BufferedImage(rozmer.width+border.width*2, rozmer.height+border.height*2, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) bi.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		AffineTransform tx = new AffineTransform();
-		tx.translate(-min.x+border.width,min.y-border.height+bi.getHeight());
-		tx.scale(1, -1.0);
+		tx.translate(
+			-(min.x*scaleFactor)+border.width +(bi.getWidth() - (max.x - min.x)*scaleFactor)/2,
+			 (max.y*scaleFactor)-border.height+(bi.getHeight()- (max.y - min.y)*scaleFactor)/2
+		);
+		/*tx.scale(scaleFactor, -scaleFactor);
+		*/
+		/*tx.translate(
+			-(min.x)+border.width,
+			 (max.y)+border.height
+		);*/
+		tx.scale(1.0, -1.0);
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
 		g.setTransform(tx);
 		g.setColor(Color.BLACK);
-		for (Okres o : okresy) {
-			g.draw(o.getHranica());
-		}
-		for (Uzol u : uzly) {
-			if (!u.isKrizovatka()) {
-				if (u.getOkres() != null) g.setColor(Color.GREEN.darker());
-				else g.setColor(Color.RED);
-				g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
+		g.setStroke(new BasicStroke(1.5f));
+		for (Okres o : aOkresy) {
+			int count = o.getHranica().npoints;
+			int x[] = new int[count];
+			int y[] = new int[count];
+			for (int i = 0; i < o.getHranica().npoints; i++) {
+				x[i] = (int) (o.getHranica().xpoints[i]*scaleFactor);
+				y[i] = (int) (o.getHranica().ypoints[i]*scaleFactor);
 			}
-			else if (u.isKrizovatka() && u.getOkres() == null) {
+			g.draw(new Polygon(x, y, count));
+		}
+		g.setColor(Color.GRAY);
+		g.setStroke(new BasicStroke(1f));
+		for (Hrana h : aHrany) {
+			g.draw(new Line2D.Double(h.getU1().getX()*scaleFactor, h.getU1().getY()*scaleFactor, h.getU2().getX()*scaleFactor, h.getU2().getY()*scaleFactor));
+		}
+		double pointWidth = Math.max(4, (2*FileParser.MAGIC_CONSTANTA) * scaleFactor);
+		double halfWidth = pointWidth / 2;
+		for (Uzol u : aUzly) {
+			if (!u.isKrizovatka()) {
+				g.setColor(Color.GREEN.darker());
+				for (Zvyraznenie z : aZvyraznene) {
+					if (z.getCentrum().equals(u)) {
+						g.setColor(z.getFarba());
+					}
+				}
+				g.fill(new Rectangle2D.Double(u.getX()*scaleFactor - halfWidth, u.getY()*scaleFactor - halfWidth, pointWidth, pointWidth));
+				//g.fillOval(u.getX()-2/scaleFactor, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
+			}
+			/*else if (u.isKrizovatka() && u.getOkres() == null) {
 				g.setColor(Color.YELLOW.darker());
 				g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
-			}
+			}*/
 		}
 		
-		g.setColor(Color.GRAY);
-		for (Hrana h : hrany) {
-			g.drawLine(h.getU1().getX(), h.getU1().getY(), h.getU2().getX(), h.getU2().getY());
+		//int y = (int) ((min.y*scaleFactor))-50;
+		for (Zvyraznenie z : aZvyraznene) {
+			g.setColor(z.getFarba());
+			/*g.drawString(z.getCentrum().getNazov(), (int) (max.x*scaleFactor)-200, y);
+			y+=20;*/
+			if (z.isPolygon()) {
+				Polygon p = new Polygon();
+				Polygon origo = z.getPolygon();
+				for (int i=0; i<origo.npoints; i++) {
+					p.addPoint((int)(origo.xpoints[i]*scaleFactor), (int)(origo.ypoints[i]*scaleFactor));
+				}
+				g.draw(p);
+				
+				g.setColor(new Color(z.getFarba().getRed(), z.getFarba().getGreen(), z.getFarba().getBlue(), 70));
+				g.fill(p);
+			}
 		}
 		
 		this.repaint();
+	}
+	
+	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany) {
+		vykresli(okresy, uzly, hrany, new HashSet<Zvyraznenie>(0));
+	}
+	
+	public void vykresli(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany, Collection<Zvyraznenie> zvyrazneneMesta) {
+		aOkresy = okresy;
+		aUzly = uzly;
+		aHrany = hrany;
+		aZvyraznene = zvyrazneneMesta;
+		vykresli();
 	}
 	
 	public void saveToImage(File path) {
