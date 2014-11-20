@@ -24,6 +24,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import javax.imageio.ImageIO;
@@ -44,6 +45,7 @@ public class MapaCanvas2 extends JComponent {
 	private Collection<Uzol> aUzly;
 	private Collection<Hrana> aHrany;
 	private Collection<Zvyraznenie> aZvyraznene;
+	private ArrayList<Uzol> aTrasa;
 
 	public MapaCanvas2() {
 		this.bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -97,12 +99,8 @@ public class MapaCanvas2 extends JComponent {
 			-(min.x * scaleFactor) + border.width + (bi.getWidth() - (max.x - min.x) * scaleFactor) / 2,
 			(max.y * scaleFactor) - border.height + (bi.getHeight() - (max.y - min.y) * scaleFactor) / 2
 		);
-		/*tx.scale(scaleFactor, -scaleFactor);
-		 */
-		/*tx.translate(
-		 -(min.x)+border.width,
-		 (max.y)+border.height
-		 );*/
+
+		
 		tx.scale(1.0, -1.0);
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
@@ -140,32 +138,11 @@ public class MapaCanvas2 extends JComponent {
 					}
 				}
 				g.fill(new Rectangle2D.Double(u.getX() * scaleFactor - halfWidth, u.getY() * scaleFactor - halfWidth, pointWidth, pointWidth));
-				//g.fillOval(u.getX()-2/scaleFactor, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
 			}
-			/*else if (u.isKrizovatka() && u.getOkres() == null) {
-			 g.setColor(Color.YELLOW.darker());
-			 g.fillOval(u.getX()-2*FileParser.MAGIC_CONSTANTA, u.getY()-2*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA, 4*FileParser.MAGIC_CONSTANTA);
-			 }*/
 		}
 
-		//int y = (int) ((min.y*scaleFactor))-50;
 		for (Zvyraznenie z : aZvyraznene) {
 			g.setColor(z.getFarba());
-			/*g.drawString(z.getCentrum().getNazov(), (int) (max.x*scaleFactor)-200, y);
-			 y+=20;*/
-			/*BufferedImage bufferedImage
-				= new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
-
-			Graphics2D g2 = bufferedImage.createGraphics();
-			g2.setColor(Color.GRAY);
-			g2.fillRect(0, 0, 5, 5);
-			g2.setColor(new Color(z.getFarba().getRed(), z.getFarba().getGreen(), z.getFarba().getBlue(), 70));
-			g2.drawLine(0, 0, 5, 5); // \
-			g2.drawLine(0, 5, 5, 0); // /
-
-			// paint with the texturing brush
-			Rectangle2D rect = new Rectangle2D.Double(0, 0, 5, 5);
-			*/
 			
 			if (z.isPolygon()) {
 				Polygon p = new Polygon();
@@ -206,11 +183,18 @@ public class MapaCanvas2 extends JComponent {
 				
 				g.drawImage(bx, ((int)(u.getX()*scaleFactor))-(fontMetrics.stringWidth(u.getNazov())/2), (int)(u.getY()*scaleFactor)+fontMetrics.getHeight()/2, null);
 				
-				//g.drawString(u.getNazov(), (float)(u.getX()*scaleFactor), (float)(u.getY()*scaleFactor));
-				//g.fill(new Rectangle2D.Double(u.getX() * scaleFactor - halfWidth, u.getY() * scaleFactor - halfWidth, pointWidth, pointWidth));
 				if (ks++>6) {
 					break;
 				}
+			}
+		}
+		
+		if (aTrasa.size() > 0) {
+			Uzol lastUzol = aTrasa.get(aTrasa.size()-1);
+			g.setColor(Color.red);
+			for (Uzol u : aTrasa) {
+				g.drawLine((int)(lastUzol.getX()*scaleFactor), (int)(lastUzol.getY()*scaleFactor), (int)(u.getX()*scaleFactor), (int)(u.getY()*scaleFactor));
+				lastUzol = u;
 			}
 		}
 
@@ -226,6 +210,16 @@ public class MapaCanvas2 extends JComponent {
 		aUzly = uzly;
 		aHrany = hrany;
 		aZvyraznene = zvyrazneneMesta;
+		aTrasa = new ArrayList<>(0);
+		vykresli();
+	}
+	
+	public void vykresliTrasu(Collection<Okres> okresy, Collection<Uzol> uzly, Collection<Hrana> hrany, ArrayList<Uzol> cesta) {
+		aOkresy = okresy;
+		aUzly = uzly;
+		aHrany = hrany;
+		aZvyraznene = new HashSet<>(0);
+		aTrasa = cesta;
 		vykresli();
 	}
 

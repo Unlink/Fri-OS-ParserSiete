@@ -72,7 +72,7 @@ public class Uzol {
 
 	@Override
 	public String toString() {
-		return "Uzol{" + "aId=" + aId + ", aNazov=" + aNazov + ", aX=" + aX + ", aY=" + aY + ", aOkres=" + aOkres + '}';
+		return aNazov;
 	}
 
 	@Override
