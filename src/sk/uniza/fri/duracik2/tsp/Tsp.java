@@ -24,9 +24,21 @@ public class Tsp implements Runnable {
 	@Override
 	public void run() {
 		NajblizsiUzol prvaFaza = new NajblizsiUzol(matica);
+		
 		prvaFaza.run();
 		Trasa trasa = prvaFaza.dajTrasu();
-		callback.log(trasa.vypis(uzly));
+		InverziaRetazcov druhaFaza = new InverziaRetazcov(trasa.toArray(), 50, 9, 9, matica, callback);
+		callback.log("Vychodzia trasa:"+druhaFaza.dajHodnotuNajRiesenia());
+		callback.log(trasa.vypis(null));
+		
+		druhaFaza.ries();
+		callback.log("\nNajlepsie riesenie: "+druhaFaza.dajHodnotuNajRiesenia());
+		StringBuilder sb = new StringBuilder();
+		for (int i : druhaFaza.dajNajlepsieRiesenie()) {
+			sb.append(uzly[i]).append(", ");
+		}
+		sb.delete(sb.length() - 2, sb.length());
+		callback.log(sb.toString());
 	}
 
 	

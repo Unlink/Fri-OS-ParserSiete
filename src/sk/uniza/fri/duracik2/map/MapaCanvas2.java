@@ -192,6 +192,7 @@ public class MapaCanvas2 extends JComponent {
 		if (aTrasa.size() > 0) {
 			Uzol lastUzol = aTrasa.get(aTrasa.size()-1);
 			g.setColor(Color.red);
+			g.setStroke(new BasicStroke(1.5f));
 			for (Uzol u : aTrasa) {
 				g.drawLine((int)(lastUzol.getX()*scaleFactor), (int)(lastUzol.getY()*scaleFactor), (int)(u.getX()*scaleFactor), (int)(u.getY()*scaleFactor));
 				lastUzol = u;

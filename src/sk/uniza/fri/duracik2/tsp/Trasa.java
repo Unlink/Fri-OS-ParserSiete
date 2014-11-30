@@ -26,12 +26,13 @@ public class Trasa {
 
 	/**
 	 * Dlzka trasy;
-	 * @return 
+	 *
+	 * @return
 	 */
 	public int dlzka() {
 		return dlzka;
 	}
-	
+
 	/**
 	 * Pridá uzol na koniec
 	 *
@@ -73,16 +74,19 @@ public class Trasa {
 
 	/**
 	 * Overí či trasa obsahuje zadaný uzol
+	 *
 	 * @param uzol
-	 * @return 
+	 *
+	 * @return
 	 */
 	public boolean obsahuje(int uzol) {
 		return mapovanie[uzol] != null;
 	}
-	
+
 	/**
 	 * Vráti zaciatok trasy
-	 * @return 
+	 *
+	 * @return
 	 */
 	public Uzol zaciatok() {
 		return zaciatok;
@@ -90,19 +94,39 @@ public class Trasa {
 
 	/**
 	 * Vypiše trasu
+	 *
 	 * @param uzly
-	 * @return 
+	 *
+	 * @return
 	 */
 	public String vypis(String[] uzly) {
 		StringBuilder sb = new StringBuilder();
 		Uzol aktual = zaciatok;
 		do {
-			sb.append(uzly[aktual.getVal()]).append(", ");
+			if (uzly == null) {
+				sb.append(aktual.getVal()).append(", ");
+			}
+			else {
+				sb.append(uzly[aktual.getVal()]).append(", ");
+			}
 			aktual = aktual.getNext();
-		} while (aktual != zaciatok);
-		
-		sb.delete(sb.length()-2, sb.length());
+		}
+		while (aktual != zaciatok);
+
+		sb.delete(sb.length() - 2, sb.length());
 		return sb.toString();
+	}
+
+	public int[] toArray() {
+		int[] pole = new int[dlzka];
+		Uzol aktual = zaciatok;
+		int i = 0;
+		do {
+			pole[i++] = aktual.getVal();
+			aktual = aktual.getNext();
+		}
+		while (aktual != zaciatok);
+		return pole;
 	}
 
 }
