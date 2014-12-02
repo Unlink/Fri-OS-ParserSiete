@@ -45,7 +45,7 @@ public class InverziaRetazcov {
 	public double spocitajUf(int[] paRiesenie) {
 		double sum = 0;
 		for (int i=1; i<paRiesenie.length; i++) {
-			sum+=aMatica[i-1][i];
+			sum+=aMatica[paRiesenie[i-1]][paRiesenie[i]];
 		}
 		sum+=aMatica[paRiesenie[paRiesenie.length-1]][0];
 		return sum;
@@ -54,11 +54,12 @@ public class InverziaRetazcov {
 	
 	public void ries() {
 		int[] pom;
-		int uzol = 0;
+		int uzol;
 		double uf;
 		int r = 0;
 		int w = 0;
 		Random rg = new Random();
+		uzol = rg.nextInt(aNajlepsieRies.length);
 		while (r != aU) {
 			pom = Arrays.copyOf(aAktualna, aAktualna.length);
 			urobInverziu(pom, uzol);
@@ -89,7 +90,7 @@ public class InverziaRetazcov {
 					r = 0;
 				}
 			}
-			uzol = (uzol+1)%aNajlepsieRies.length;
+			uzol = rg.nextInt(aNajlepsieRies.length);
 		}
 	}
 	

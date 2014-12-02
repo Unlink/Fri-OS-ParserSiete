@@ -20,20 +20,26 @@ public class Tsp implements Runnable {
 		this.uzly = uzly;
 		this.callback = callback;
 	}
-
+	
 	@Override
 	public void run() {
 		NajblizsiUzol prvaFaza = new NajblizsiUzol(matica);
-		
 		prvaFaza.run();
 		Trasa trasa = prvaFaza.dajTrasu();
 		InverziaRetazcov druhaFaza = new InverziaRetazcov(trasa.toArray(), 50, 9, 9, matica, callback);
 		callback.log("Vychodzia trasa:"+druhaFaza.dajHodnotuNajRiesenia());
-		callback.log(trasa.vypis(null));
+		StringBuilder sb = new StringBuilder();
+		for (int i : druhaFaza.dajNajlepsieRiesenie()) {
+			sb.append(uzly[i]).append(", ");
+		}
+		sb.delete(sb.length() - 2, sb.length());
+		callback.log(sb.toString());
 		
 		druhaFaza.ries();
+		
+		
 		callback.log("\nNajlepsie riesenie: "+druhaFaza.dajHodnotuNajRiesenia());
-		StringBuilder sb = new StringBuilder();
+		sb = new StringBuilder();
 		for (int i : druhaFaza.dajNajlepsieRiesenie()) {
 			sb.append(uzly[i]).append(", ");
 		}
